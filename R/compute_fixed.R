@@ -1,3 +1,19 @@
+#' Multivariate regression with covariance estimate
+#'
+#' The function trains multivariate lasso with a given covariance estimate
+#'
+#' @param X matrix, design matrix of SNP dosages
+#' @param Y matrix, matrix of G isoform expression across columns
+#' @param lam2 numeric, lambda penalty for LASSO
+#' @param weights matrix, weights for each predictor in X
+#' @param Omega matrix, precision matrix of Y
+#' @param tol.in numeric, tolerance for objective difference
+#' @param maxit.in int, maximum number of iteractions
+#' @param silent logical
+#'
+#' @return list of MRCE estimates
+#'
+#' @export
 compute_fixed = function(X,
                          Y,
                          lam2,
