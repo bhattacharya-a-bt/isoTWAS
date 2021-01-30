@@ -1,10 +1,10 @@
-compute_fixed_mrce = function(X,
-                              Y,
-                              lam2,
-                              omega,
-                              tol.in,
-                              maxit.in,
-                              silent){
+compute_fixed = function(X,
+                         Y,
+                         lam2,
+                         Omega,
+                         tol.in,
+                         maxit.in,
+                         silent){
 
     n=nrow(X)
     p=ncol(X)
@@ -19,16 +19,17 @@ compute_fixed_mrce = function(X,
     Y=scale(Y, center=my, scale=FALSE)
     xty=crossprod(X,Y)
     xtx=crossprod(X)
-    tolmult=sum(crossprod(Y)*omega)
+    tolmult=sum(crossprod(Y)*Omega)
     tol.in=tol.in*tolmult
-    xtyom=xty%*%omega
+    xtyom=xty%*%Omega
     new.B=rblasso(s=xtx, m=xtyom,
-                  om=omega, nlam=nlam,
+                  om=Omega, nlam=nlam,
                   n=n, B0=NULL,
                   soft=NULL, tol=tol.in,
                   maxit=maxit.in,
                   quiet=silent)$B
     muhat=as.numeric(my - crossprod(new.B, mx))
     return(list(Bhat=new.B, muhat=muhat,
-                omega=omega, mx=mx, my=my))
+                Omega=Omega, mx=mx, my=my))
+
 }
