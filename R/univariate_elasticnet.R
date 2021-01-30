@@ -18,7 +18,10 @@
 #' @return data frame of elastic net, lasso, and LMM based predictions
 #'
 #' @importFrom glmnet cv.glmnet
-#' @importFrom rrBLUP mixed.solve
+#' @importFrom parallel mclapply
+#' @importFrom pbapply pbapply
+#' @importFrom tibble tibble
+#' @importFrom rlist list.append
 #'
 #' @export
 univariate_elasticnet <- function(X,
