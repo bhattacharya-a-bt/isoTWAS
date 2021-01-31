@@ -91,8 +91,7 @@ compute_curds_whey <- function(X,
 
     }
 
-    return(sapply(models,
-                  function(x) as.numeric(coef(x,s='lambda.min'))[-1]))
+    return(modelList)
 
 
 }
