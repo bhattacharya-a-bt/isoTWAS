@@ -14,6 +14,7 @@
 #' @return data frame of elastic net, lasso, and LMM based predictions
 #'
 #' @importFrom susieR susie
+#' @importFrom estimatr lm_robust
 #'
 #' @export
 finemap_regress <- function(X,
