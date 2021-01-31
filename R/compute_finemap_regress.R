@@ -96,5 +96,7 @@ compute_finemap_regress <- function(X,
 
     }
 
+    return(modelList)
+
 
 }
