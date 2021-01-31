@@ -9,7 +9,6 @@ compute_mrce(
   Y,
   lambda = NULL,
   nlambda = 50,
-  weights = NULL,
   Omega,
   nfolds = 5,
   tol.in,
@@ -23,8 +22,6 @@ compute_mrce(
 \item{Y}{matrix, matrix of G isoform expression across columns}
 
 \item{lambda}{vector, lambda penalty vector for LASSO to tune on}
-
-\item{weights}{matrix, weights for each predictor in X}
 
 \item{Omega}{matrix, precision matrix of Y}
 

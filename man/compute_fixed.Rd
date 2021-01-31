@@ -4,7 +4,7 @@
 \alias{compute_fixed}
 \title{Multivariate regression with covariance estimate}
 \usage{
-compute_fixed(X, Y, lam2, weights = NULL, Omega, tol.in, maxit.in, silent)
+compute_fixed(X, Y, lam2, Omega, tol.in, maxit.in, silent)
 }
 \arguments{
 \item{X}{matrix, design matrix of SNP dosages}
@@ -13,8 +13,6 @@ compute_fixed(X, Y, lam2, weights = NULL, Omega, tol.in, maxit.in, silent)
 
 \item{lam2}{numeric, lambda penalty for LASSO}
 
-\item{weights}{matrix, weights for each predictor in X}
-
 \item{Omega}{matrix, precision matrix of Y}
 
 \item{tol.in}{numeric, tolerance for objective difference}
@@ -22,6 +20,8 @@ compute_fixed(X, Y, lam2, weights = NULL, Omega, tol.in, maxit.in, silent)
 \item{maxit.in}{int, maximum number of iteractions}
 
 \item{silent}{logical}
+
+\item{weights}{matrix, weights for each predictor in X}
 }
 \value{
 list of MRCE estimates
