@@ -55,7 +55,7 @@ compute_isotwas <- function(X,
     if (is.null(R)){
         R = nrow(Y.full)/nrow(Y)
     } else {
-        if (nrow(Y.full) != R*){
+        if (nrow(Y.full) != R){
             stop('No. of rows of Y.full =/= R*N')
         }
     }

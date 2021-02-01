@@ -15,7 +15,8 @@ compute_spring(
   maxit.in,
   verbose = T,
   par = F,
-  n.cores
+  n.cores,
+  seed
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ compute_spring(
 \item{verbose}{logical}
 
 \item{par}{logical, to parallelize}
+
+\item{seed}{int, random seed}
 
 \item{ncores}{int, number of cores}
 }

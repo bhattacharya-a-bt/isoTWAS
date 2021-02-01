@@ -15,7 +15,8 @@ univariate_elasticnet(
   verbose,
   par = F,
   n.cores = NULL,
-  tx_names = NULL
+  tx_names = NULL,
+  seed
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ univariate_elasticnet(
 \item{par}{logical, uses mclapply to parallelize model fit}
 
 \item{n.cores}{int, number of parallel cores}
+
+\item{seed}{int, random seed}
 
 \item{tx_name}{vector, character vector of tx names in order of columns of Y}
 }

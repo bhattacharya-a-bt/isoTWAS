@@ -13,7 +13,8 @@ compute_curds_whey(
   verbose,
   par = F,
   n.cores = NULL,
-  tx_names = NULL
+  tx_names = NULL,
+  seed
 )
 }
 \arguments{
@@ -33,7 +34,9 @@ compute_curds_whey(
 
 \item{n.cores}{int, number of parallel cores}
 
-\item{tx_names}{vector, character vector of tx names in order of columns of Y}
+\item{tx_names}{vector, character vector of tx names - order of columns of Y}
+
+\item{seed}{int, random seed}
 
 \item{scale}{logical, T/F to scale Y by Omega}
 }

@@ -13,7 +13,8 @@ compute_finemap_regress(
   nfolds,
   verbose = F,
   tx_names = NULL,
-  coverage = 0.9
+  coverage = 0.9,
+  seed
 )
 }
 \arguments{
@@ -29,10 +30,12 @@ compute_finemap_regress(
 
 \item{verbose}{logical}
 
-\item{tx_names}{vector, character vector of tx names in order of columns of Y}
+\item{tx_names}{vector, character vector of tx names - order of columns of Y}
+
+\item{seed}{int, random seed}
 }
 \value{
-data frame of elastic net, lasso, and LMM based predictions
+isoTWAS model list
 }
 \description{
 The function feature selects with SuSiE and runs SUR with cluster-robust

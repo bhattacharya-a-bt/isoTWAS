@@ -13,7 +13,8 @@ compute_mrce(
   nfolds = 5,
   tol.in,
   maxit.in,
-  verbose
+  verbose,
+  seed
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ compute_mrce(
 \item{maxit.in}{int, maximum number of iteractions}
 
 \item{verbose}{logical}
+
+\item{seed}{int, random seed}
 }
 \value{
 CV MRCE fit
