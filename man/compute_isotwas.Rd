@@ -10,11 +10,11 @@ compute_isotwas(
   Y.rep,
   R,
   id,
-  Omega = NULL,
   omega_est = "replicates",
-  omega_nlambda = 15,
+  omega_nlambda = 10,
   method = c("mrce_lasso", "curds_whey", "multi_enet", "mrce_enet", "finemap",
-    "uni_enet", "uni_susie", "uni_blup"),
+    "univariate"),
+  predict_nlambda = 50,
   family = "gaussian",
   scale = F,
   alpha = 0.5,
@@ -23,7 +23,8 @@ compute_isotwas(
   par = F,
   n.cores = NULL,
   tx_names = NULL,
-  seed = NULL
+  seed = NULL,
+  return_all = F
 )
 }
 \arguments{
@@ -37,7 +38,15 @@ compute_isotwas(
 
 \item{id}{vector, vector of sample ids showing rep to id}
 
-\item{family}{character, glmnet glm family}
+\item{omega_est}{character, 'replicates' or 'mean' to use Y.rep or Y}
+
+\item{omega_nlambda}{int, number of omegas to generate}
+
+\item{method}{character, vector of methods to use}
+
+\item{predict_nlambda}{int, number of lambdas in MRCE}
+
+\item{family}{character, glmnet family}
 
 \item{scale}{logical, T/F to scale Y by Omega}
 
@@ -51,7 +60,11 @@ compute_isotwas(
 
 \item{n.cores}{int, number of parallel cores}
 
-\item{tx_names}{vector, character vector of tx names in order of columns of Y}
+\item{tx_names}{vector, character vector of tx names - order of columns of Y}
+
+\item{seed}{int, random seed}
+
+\item{return_all}{logical, return R2 for all models?}
 }
 \value{
 optimal isoTWAS model

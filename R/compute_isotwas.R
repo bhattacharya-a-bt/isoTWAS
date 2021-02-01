@@ -8,14 +8,20 @@
 #' @param Y.rep matrix, matrix of G isoform expression with replicates
 #' @param R int, number of replicates
 #' @param id vector, vector of sample ids showing rep to id
-#' @param family character, glmnet glm family
+#' @param omega_est character, 'replicates' or 'mean' to use Y.rep or Y
+#' @param omega_nlambda int, number of omegas to generate
+#' @param method character, vector of methods to use
+#' @param predict_nlambda int, number of lambdas in MRCE
+#' @param family character, glmnet family
 #' @param scale logical, T/F to scale Y by Omega
 #' @param alpha numeric, elastic net mixing parameter
 #' @param nfolds int, number of CV folds
 #' @param verbose logical
 #' @param par logical, uses mclapply to parallelize model fit
 #' @param n.cores int, number of parallel cores
-#' @param tx_names vector, character vector of tx names in order of columns of Y
+#' @param tx_names vector, character vector of tx names - order of columns of Y
+#' @param seed int, random seed
+#' @param return_all logical, return R2 for all models?
 #'
 #' @return optimal isoTWAS model
 #'
@@ -26,13 +32,12 @@ compute_isotwas <- function(X,
                             Y.rep,
                             R,
                             id,
-                            Omega = NULL,
                             omega_est = 'replicates',
-                            omega_nlambda = 15,
+                            omega_nlambda = 10,
                             method = c('mrce_lasso','curds_whey',
                                        'multi_enet','mrce_enet',
-                                       'finemap','uni_enet',
-                                       'uni_susie','uni_blup'),
+                                       'finemap','univariate'),
+                            predict_nlambda = 50,
                             family = 'gaussian',
                             scale = F,
                             alpha = 0.5,
@@ -41,7 +46,8 @@ compute_isotwas <- function(X,
                             par = F,
                             n.cores = NULL,
                             tx_names = NULL,
-                            seed = NULL){
+                            seed = NULL,
+                            return_all = F){
 
     ### CHECKS
     if (nrow(X) != nrow(Y)){
@@ -53,9 +59,9 @@ compute_isotwas <- function(X,
     G = ncol(Y)
 
     if (is.null(R)){
-        R = nrow(Y.full)/nrow(Y)
+        R = nrow(Y.rep)/nrow(Y)
     } else {
-        if (nrow(Y.full) != R){
+        if (nrow(Y.rep) != R*N){
             stop('No. of rows of Y.full =/= R*N')
         }
     }
@@ -69,9 +75,177 @@ compute_isotwas <- function(X,
                                nlambda = omega_nlambda,
                                verbose = verbose)
 
+    if (return_all){
+        print('return_all is set to T and all methods will be run.')
+        method = c('mrce_lasso','curds_whey',
+               'multi_enet','mrce_enet',
+               'finemap','uni_enet',
+               'uni_susie','uni_blup')
+        }
 
+    if (is.null(seed)){
+        seed = sample(1:100000,1)
+    }
 
-    return(modelList)
+    all_models = list()
+
+    if ('mrce_lasso' %in% method){
+        if (verbose){print('Running mrce_lasso')}
+        mrce_lasso = list()
+        for (i in 1:length(omega_list$icov)){
+            mrce_lasso = rlist::list.append(mrce_lasso,
+                                            compute_mrce(X = X,
+                                                         Y = Y,
+                                                         lambda = NULL,
+                                                         nlambda = 50,
+                                                         Omega =
+                                                           omega_list$icov[[i]],
+                                                         nfolds = 5,
+                                                         tol.in = tol.in,
+                                                         maxit.in = maxit.in,
+                                                         verbose = verbose,
+                                                         seed = seed))
+        }
+        all_models = rlist::list.append(all_models,get_best(mrce_lasso))
+    }
+
+    if ('curds_whey' %in% method){
+        if (verbose){print('Running curds_whey')}
+        curds_whey = list()
+        for (i in 1:length(omega_list$icov)){
+            curds_whey = rlist::list.append(curds_whey,
+                                            compute_curds_whey(X,
+                                                               Y,
+                                                               family = family,
+                                                               alpha = 0.5,
+                                                               nfolds = 5,
+                                                               verbose =
+                                                                   verbose,
+                                                               par = F,
+                                                               n.cores = NULL,
+                                                               tx_names = NULL,
+                                                               seed))
+        }
+        all_models = rlist::list.append(all_models,get_best(curds_whey))
+    }
+
+    if ('multi_enet' %in% method){
+        if (verbose){print('Running curds_whey')}
+        best_multi_enet =
+            multivariate_elasticnet(X = X,
+                                    Y = Y,
+                                    Omega =
+                                        omega_list$icov[[omega_nlambda]],
+                                    scale = scale,
+                                    alpha = alpha,
+                                    nfolds = nfolds,
+                                    verbose = verbose,
+                                    par = par,
+                                    n.cores = n.cores,
+                                    tx_names = tx_names,
+                                    seed = seed)
+        all_models = rlist::list.append(all_models,best_multi_enet)
+    }
+
+    if ('mrce_enet' %in% method){
+        if (verbose){print('Running mrce_enet')}
+        if (!verbose){
+            sink(tempfile())
+        }
+
+        mrce_enet = list()
+        for (i in 1:length(omega_list$icov)){
+            mrce_enet =
+                rlist::list.append(mrce_enet,
+                                   compute_spring(X = X,
+                                                  Y = Y,
+                                                  Omega =
+                                                      omega_list$icov[[i]],
+                                                  nfolds = nfolds,
+                                                  tol.in = tol.in,
+                                                  maxit.in = maxit.in,
+                                                  verbose = verbose,
+                                                  seed = seed,
+                                                  par = par,
+                                                  n.cores = n.cores))
+        }
+
+        if (!verbose){
+            sink()
+        }
+
+        all_models = rlist::list.append(all_models,get_best(mrce_enet))
+    }
+
+    if ('finemap' %in% method){
+        if (verbose){print('Running finemap')}
+        best_finemap = compute_finemap_regress(X = X,
+                                               Y = Y,
+                                               Y.rep = Y.rep,
+                                               R = R,
+                                               id = id,
+                                               nfolds = nfolds,
+                                               verbose = verbose,
+                                               tx_names = tx_names,
+                                               coverage = coverage,
+                                               seed = seed)
+        all_models = rlist::list.append(all_models,best_finemap)
+    }
+
+    if ('univariate' %in% method){
+        if (verbose){print('Running univariate')}
+        uni_enet = univariate_elasticnet(X = X,
+                                         Y = Y,
+                                         Omega = omega_list[[omega_nlambda]],
+                                         family = family,
+                                         scale = scale,
+                                         alpha = alpha,
+                                         nfolds = nfolds,
+                                         verbose = verbose,
+                                         par = par,
+                                         n.cores = n.cores,
+                                         tx_names = tx_names,
+                                         seed = seed)
+
+        uni_blup = univariate_blup(X = X,
+                                   Y = Y,
+                                   Omega = omega_list[[omega_nlambda]],
+                                   scale = scale,
+                                   alpha = alpha,
+                                   nfolds = nfolds,
+                                   verbose = verbose,
+                                   par = par,
+                                   n.cores = n.cores,
+                                   tx_names = tx_names,
+                                   seed = seed)
+
+        uni_susie = univariate_susie(X = X,
+                                    Y = Y,
+                                    Omega = omega_list[[omega_nlambda]],
+                                    scale = scale,
+                                    alpha = alpha,
+                                    nfolds = nfolds,
+                                    verbose = verbose,
+                                    par = par,
+                                    n.cores = n.cores,
+                                    tx_names = tx_names,
+                                    seed = seed)
+        univariate = list(uni_enet, uni_blup, uni_susie)
+        all_models = rlist::list.append(all_models,get_best(univariate))
+
+    }
+
+    isotwas_mod = get_best(all_models)
+
+    if (return_all){
+        r2 = sapply(all_models, function(y) sapply(y,function(x) x$R2))
+        r2.df = as.data.frame(cbind(tx_names,r2))
+        colnames(r2.df)[-1] = method
+        isotwas_mod = list(Model = get_best(all_models),
+                           R2 = r2.df)
+        }
+
+    return(isotwas_mod)
 
 
 }

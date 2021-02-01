@@ -41,7 +41,7 @@ multivariate_elasticnet <- function(X,
     }
 
     if (scale){
-        Y = Y %*% (Omega %^% .5)
+        Y = Y %*% solve((Omega %^% .5))
     }
 
     Y = as.data.frame(Y)
