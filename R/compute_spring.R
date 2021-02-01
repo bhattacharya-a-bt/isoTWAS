@@ -14,6 +14,7 @@
 #' @param verbose logical
 #' @param par logical, to parallelize
 #' @param ncores int, number of cores
+#' @param seed int, random seed
 #'
 #' @return CV MRCE fit
 #'
@@ -34,12 +35,14 @@ compute_spring = function(X,
                           maxit.in,
                           verbose = T,
                           par = F,
-                          n.cores){
+                          n.cores,
+                          seed){
 
     if (!is.null(colnames(Y))){
         tx_names = colnames(Y)
     }
 
+    set.seed(seed)
     train.folds = caret::createFolds(1:nrow(Y),
                                      k = nfolds,
                                      returnTrain = T)

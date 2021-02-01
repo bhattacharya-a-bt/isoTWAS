@@ -13,6 +13,7 @@
 #' @param par logical, uses mclapply to parallelize model fit
 #' @param n.cores int, number of parallel cores
 #' @param tx_name vector, character vector of tx names in order of columns of Y
+#' @param seed int, random seed
 #'
 #' @return data frame of elastic net, lasso, and LMM based predictions
 #'
@@ -32,7 +33,8 @@ multivariate_elasticnet <- function(X,
                                     verbose = T,
                                     par = F,
                                     n.cores = NULL,
-                                    tx_names = NULL){
+                                    tx_names = NULL,
+                                    seed){
 
     if (!is.null(colnames(Y))){
         tx_names = colnames(Y)
@@ -49,6 +51,7 @@ multivariate_elasticnet <- function(X,
 
     if (par){
         doParallel::registerDoParallel(n.cores)
+        set.seed(seed)
         models = glmnet::cv.glmnet(x = X,
                                    y = as.matrix(Y),
                                    nfolds = nfolds,
@@ -58,6 +61,7 @@ multivariate_elasticnet <- function(X,
                                    keep = T,
                                    trace.it = ifelse(verbose,1,0))
     } else  {
+        set.seed(seed)
         models = glmnet::cv.glmnet(x = X,
                                    y = as.matrix(Y),
                                    nfolds = nfolds,

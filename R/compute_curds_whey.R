@@ -12,7 +12,8 @@
 #' @param verbose logical
 #' @param par logical, uses mclapply to parallelize model fit
 #' @param n.cores int, number of parallel cores
-#' @param tx_names vector, character vector of tx names in order of columns of Y
+#' @param tx_names vector, character vector of tx names - order of columns of Y
+#' @param seed int, random seed
 #'
 #' @return data frame of elastic net, lasso, and LMM based predictions
 #'
@@ -30,7 +31,8 @@ compute_curds_whey <- function(X,
                                verbose,
                                par = F,
                                n.cores = NULL,
-                               tx_names = NULL){
+                               tx_names = NULL,
+                               seed){
 
     if (!is.null(colnames(Y))){
         tx_names = colnames(Y)
@@ -41,6 +43,7 @@ compute_curds_whey <- function(X,
         colnames(Y) = tx_names
     }
 
+    set.seed(seed)
     train.folds = caret::createFolds(1:nrow(Y),
                                      k = nfolds,
                                      returnTrain = T)

@@ -10,6 +10,7 @@
 #' @param tol.in numeric, tolerance for objective difference
 #' @param maxit.in int, maximum number of iteractions
 #' @param verbose logical
+#' @param seed int, random seed
 #'
 #' @return CV MRCE fit
 #'
@@ -22,12 +23,14 @@ compute_mrce = function(X,
                         nfolds = 5,
                         tol.in,
                         maxit.in,
-                        verbose){
+                        verbose,
+                        seed){
 
     if (is.null(lambda)){
         lambda = 10^(seq(2,-30,length.out = nlambda))
         }
 
+    set.seed(seed)
     train.folds = caret::createFolds(1:nrow(Y),
                                      k = nfolds,
                                      returnTrain = T)

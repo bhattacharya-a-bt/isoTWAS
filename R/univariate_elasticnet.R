@@ -14,6 +14,7 @@
 #' @param par logical, uses mclapply to parallelize model fit
 #' @param n.cores int, number of parallel cores
 #' @param tx_name vector, character vector of tx names in order of columns of Y
+#' @param seed int, random seed
 #'
 #' @return data frame of elastic net, lasso, and LMM based predictions
 #'
@@ -34,7 +35,8 @@ univariate_elasticnet <- function(X,
                                   verbose,
                                   par = F,
                                   n.cores = NULL,
-                                  tx_names = NULL){
+                                  tx_names = NULL,
+                                  seed){
 
     if (!is.null(colnames(Y))){
         tx_names = colnames(Y)
@@ -50,6 +52,7 @@ univariate_elasticnet <- function(X,
         }
 
     if (par){
+        set.seed(seed)
         models = parallel::mcapply(Y,
                                    FUN = glmnet::cv.glmnet,
                                    MARGIN = 2,
@@ -61,6 +64,7 @@ univariate_elasticnet <- function(X,
                                    alpha = alpha,
                                    mc.cores = n.cores)
         } else if (verbose){
+            set.seed(seed)
             models = pbapply::pbapply(Y,
                                       FUN = glmnet::cv.glmnet,
                                       MARGIN = 2,
@@ -71,6 +75,7 @@ univariate_elasticnet <- function(X,
                                       family = family,
                                       alpha = alpha)
     } else {
+        set.seed(seed)
         models = apply(Y,
                        FUN = glmnet::cv.glmnet,
                        2,

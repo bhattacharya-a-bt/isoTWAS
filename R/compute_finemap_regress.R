@@ -9,9 +9,10 @@
 #' @param R int, number of replicates
 #' @param id vector, vector of sample ids showing rep to id
 #' @param verbose logical
-#' @param tx_names vector, character vector of tx names in order of columns of Y
+#' @param tx_names vector, character vector of tx names - order of columns of Y
+#' @param seed int, random seed
 #'
-#' @return data frame of elastic net, lasso, and LMM based predictions
+#' @return isoTWAS model list
 #'
 #' @importFrom susieR susie
 #' @importFrom caret createFolds
@@ -27,7 +28,8 @@ compute_finemap_regress <- function(X,
                                     nfolds,
                                     verbose = F,
                                     tx_names = NULL,
-                                    coverage = .9){
+                                    coverage = .9,
+                                    seed){
 
     G = ncol(Y)
     N = nrow(Y)
@@ -45,6 +47,7 @@ compute_finemap_regress <- function(X,
         colnames(Y) = tx_names
     }
 
+    set.seed(seed)
     train.folds = caret::createFolds(1:nrow(Y),
                                      k = nfolds,
                                      returnTrain = T)
