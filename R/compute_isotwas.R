@@ -22,6 +22,8 @@
 #' @param tx_names vector, character vector of tx names - order of columns of Y
 #' @param seed int, random seed
 #' @param return_all logical, return R2 for all models?
+#' @param tol.in numeric, tolerance for objective difference
+#' @param maxit.in int, maximum number of iteractions
 #'
 #' @return optimal isoTWAS model
 #'
@@ -42,12 +44,14 @@ compute_isotwas <- function(X,
                             scale = F,
                             alpha = 0.5,
                             nfolds = 5,
-                            verbose,
+                            verbose = F,
                             par = F,
                             n.cores = NULL,
                             tx_names = NULL,
                             seed = NULL,
-                            return_all = F){
+                            return_all = F,
+                            tol.in = 1e-3,
+                            maxit.in = 1e3){
 
     ### CHECKS
     if (nrow(X) != nrow(Y)){

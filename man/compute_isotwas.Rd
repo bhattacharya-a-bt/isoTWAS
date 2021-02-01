@@ -19,12 +19,14 @@ compute_isotwas(
   scale = F,
   alpha = 0.5,
   nfolds = 5,
-  verbose,
+  verbose = F,
   par = F,
   n.cores = NULL,
   tx_names = NULL,
   seed = NULL,
-  return_all = F
+  return_all = F,
+  tol.in = 0.001,
+  maxit.in = 1000
 )
 }
 \arguments{
@@ -65,6 +67,10 @@ compute_isotwas(
 \item{seed}{int, random seed}
 
 \item{return_all}{logical, return R2 for all models?}
+
+\item{tol.in}{numeric, tolerance for objective difference}
+
+\item{maxit.in}{int, maximum number of iteractions}
 }
 \value{
 optimal isoTWAS model
