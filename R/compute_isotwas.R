@@ -52,7 +52,8 @@ compute_isotwas <- function(X,
                             run_all = T,
                             return_all = F,
                             tol.in = 1e-3,
-                            maxit.in = 1e3){
+                            maxit.in = 1e3,
+                            coverage = .9){
 
     ### CHECKS
     if (nrow(X) != nrow(Y)){
