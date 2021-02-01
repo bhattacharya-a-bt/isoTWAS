@@ -62,7 +62,7 @@ compute_finemap_regress <- function(X,
         id.tr = as.character(id[id %in% train.folds[[tr]]])
         id.tr = as.factor(id.tr)
         Y.rep.tr = Y.rep[id %in% train.folds[[tr]],]
-        B.cur = finemap_regress(X = X.tr,
+        B.cur = finemap_regress(X = Matrix::Matrix(X.tr),
                                 Y = Y.tr,
                                 Y.rep = Y.rep.tr,
                                 R = R,
@@ -75,7 +75,7 @@ compute_finemap_regress <- function(X,
     }
 
     r2.vec = sapply(1:ncol(Y),calc.r2,Y,pred)
-    final.model = finemap_regress(X = X,
+    final.model = finemap_regress(X = Matrix::Matrix(X),
                                   Y = Y,
                                   Y.rep = Y.rep,
                                   R = R,

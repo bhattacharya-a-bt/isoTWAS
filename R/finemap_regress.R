@@ -47,7 +47,7 @@ finemap_regress <- function(X,
 
         susie.fit =
             rlist::list.append(susie.fit,
-                               susieR::susie(Matrix::Matrix(X),
+                               susieR::susie(Matrix::Matrix(X,sparse = T),
                                              Y[,i],
                                              estimate_residual_variance = TRUE,
                                              estimate_prior_variance = FALSE,

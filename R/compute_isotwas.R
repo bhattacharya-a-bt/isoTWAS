@@ -49,6 +49,7 @@ compute_isotwas <- function(X,
                             n.cores = NULL,
                             tx_names = NULL,
                             seed = NULL,
+                            run_all = T,
                             return_all = F,
                             tol.in = 1e-3,
                             maxit.in = 1e3){
@@ -71,6 +72,7 @@ compute_isotwas <- function(X,
     }
 
     ### COMPUTE OMEGA
+    if (verbose){print('Computing Omega')}
     omega_list = compute_omega(Y,
                                Y.rep,
                                R,
@@ -79,8 +81,8 @@ compute_isotwas <- function(X,
                                nlambda = omega_nlambda,
                                verbose = verbose)
 
-    if (return_all){
-        print('return_all is set to T and all methods will be run.')
+    if (run_all){
+        print('run_all is set to T and all methods will be run.')
         method = c('mrce_lasso','curds_whey',
                'multi_enet','mrce_enet',
                'finemap','uni_enet',
@@ -134,7 +136,7 @@ compute_isotwas <- function(X,
     }
 
     if ('multi_enet' %in% method){
-        if (verbose){print('Running curds_whey')}
+        if (verbose){print('Running multi_enet')}
         best_multi_enet =
             multivariate_elasticnet(X = X,
                                     Y = Y,
