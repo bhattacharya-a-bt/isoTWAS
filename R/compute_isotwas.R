@@ -106,7 +106,7 @@ compute_isotwas <- function(X,
                                                          nlambda = 50,
                                                          Omega =
                                                            omega_list$icov[[i]],
-                                                         nfolds = 5,
+                                                         nfolds = nfolds,
                                                          tol.in = tol.in,
                                                          maxit.in = maxit.in,
                                                          verbose = verbose,
