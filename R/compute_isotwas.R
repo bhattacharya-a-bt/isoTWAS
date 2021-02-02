@@ -162,29 +162,23 @@ compute_isotwas <- function(X,
             sink(tempfile())
         }
 
-        mrce_enet = list()
-        for (i in 1:length(omega_list$icov)){
-            mrce_enet =
-                rlist::list.append(mrce_enet,
-                                   compute_spring(X = X,
-                                                  Y = Y,
-                                                  Omega =
-                                                      omega_list$icov[[i]],
-                                                  nfolds = nfolds,
-                                                  tol.in = tol.in,
-                                                  maxit.in = maxit.in,
-                                                  verbose = verbose,
-                                                  seed = seed,
-                                                  par = par,
-                                                  n.cores = n.cores))
-        }
+        best_mrce_enet = compute_spring(X = X,
+                                        Y = Y,
+                                        Omega =
+                                          omega_list$icov[[length(omega_list)]],
+                                        nfolds = nfolds,
+                                        tol.in = tol.in,
+                                        maxit.in = maxit.in,
+                                        verbose = verbose,
+                                        seed = seed,
+                                        par = par,
+                                        n.cores = n.cores)
 
         if (!verbose){
             sink()
         }
 
-        all_models = rlist::list.append(all_models,get_best(mrce_enet,
-                                                            G = G))
+        all_models = rlist::list.append(all_models,best_mrce_enet)
     }
 
     if ('finemap' %in% method){
