@@ -227,16 +227,17 @@ compute_isotwas <- function(X,
                                    seed = seed)
 
         uni_susie = univariate_susie(X = X,
-                                    Y = Y,
-                                    Omega = omega_list[[omega_nlambda]],
-                                    scale = scale,
-                                    alpha = alpha,
-                                    nfolds = nfolds,
-                                    verbose = verbose,
-                                    par = par,
-                                    n.cores = n.cores,
-                                    tx_names = tx_names,
-                                    seed = seed)
+                                     Y = Y,
+                                     Omega = omega_list[[omega_nlambda]],
+                                     scale = scale,
+                                     alpha = alpha,
+                                     nfolds = nfolds,
+                                     verbose = verbose,
+                                     par = par,
+                                     n.cores = n.cores,
+                                     tx_names = tx_names,
+                                     seed = seed)
+
         univariate = list(uni_enet,
                           uni_blup,
                           uni_susie)
