@@ -60,6 +60,17 @@ finemap_regress <- function(X,
     cs.all = sort(unique(unlist(sapply(susie.fit,
                                        function(x) unlist(x$sets$cs)))))
     P.fm = length(cs.all)
+    if (P.fm == 0){
+
+        cs.all = sort(unique(unlist(sapply(susie.fit,
+                                           function(x) which.max(x$pip)))))
+        cs.all = c(cs.all,
+                   sort(unique(unlist(sapply(susie.fit,
+                                             function(x)
+                                                 which(order(x$pip) == 2))))))
+        P.fm = length(cs.all)
+
+    }
 
     X.design = do.call(rbind, replicate(R, X[,cs.all], simplify=FALSE))
     X.design = as.data.frame(X.design)
