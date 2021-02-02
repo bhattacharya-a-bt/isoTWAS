@@ -66,7 +66,7 @@ univariate_susie <- function(X,
 
             susie.fit =
                 rlist::list.append(susie.fit,
-                                   susieR::susie(Matrix::Matrix(X.tr),
+                                   susieR::susie(Matrix::Matrix(X.tr,sparse=T),
                                                  Y.tr[,i],
                                                  estimate_residual_variance =
                                                      TRUE,
@@ -88,7 +88,7 @@ univariate_susie <- function(X,
 
         susie.fit =
             rlist::list.append(susie.fit,
-                               susieR::susie(Matrix::Matrix(X),
+                               susieR::susie(Matrix::Matrix(X,sparse=T),
                                              Y[,i],
                                              estimate_residual_variance =
                                                  TRUE,

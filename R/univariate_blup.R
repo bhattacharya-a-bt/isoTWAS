@@ -79,7 +79,7 @@ univariate_blup <- function(X,
                      K = t(X.tr) %*% X.tr / (ncol(X.tr) - 1))
 
     modelList = list()
-    for (i in 1:length(susie.fit)){
+    for (i in 1:length(blup.fit)){
 
         mod = tibble::tibble(SNP = colnames(X),
                              Weight = blup.fit[[i]]$u)
