@@ -113,7 +113,8 @@ compute_isotwas <- function(X,
                                                          verbose = verbose,
                                                          seed = seed))
         }
-        all_models = rlist::list.append(all_models,get_best(mrce_lasso))
+        all_models = rlist::list.append(all_models,get_best(mrce_lasso,
+                                                            G = G))
     }
 
     if ('curds_whey' %in% method){
@@ -133,7 +134,8 @@ compute_isotwas <- function(X,
                                                                tx_names = NULL,
                                                                seed))
         }
-        all_models = rlist::list.append(all_models,get_best(curds_whey))
+        all_models = rlist::list.append(all_models,get_best(curds_whey,
+                                                            G = G))
     }
 
     if ('multi_enet' %in% method){
@@ -181,7 +183,8 @@ compute_isotwas <- function(X,
             sink()
         }
 
-        all_models = rlist::list.append(all_models,get_best(mrce_enet))
+        all_models = rlist::list.append(all_models,get_best(mrce_enet,
+                                                            G = G))
     }
 
     if ('finemap' %in% method){
@@ -241,17 +244,20 @@ compute_isotwas <- function(X,
         univariate = list(uni_enet,
                           uni_blup,
                           uni_susie)
-        all_models = rlist::list.append(all_models,get_best(univariate))
+        all_models = rlist::list.append(all_models,get_best(univariate,
+                                                            G = G))
 
     }
 
-    isotwas_mod = get_best(all_models)
+    isotwas_mod = get_best(all_models,
+                           G = G)
 
     if (return_all){
         r2 = sapply(all_models, function(y) sapply(y,function(x) x$R2))
         r2.df = as.data.frame(cbind(colnames(Y),r2))
         colnames(r2.df) = c('Transcript',method)
-        isotwas_mod = list(Model = get_best(all_models),
+        isotwas_mod = list(Model = get_best(all_models,
+                                            G = G),
                            R2 = r2.df)
         }
 
