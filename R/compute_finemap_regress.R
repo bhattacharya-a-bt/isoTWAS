@@ -69,7 +69,7 @@ compute_finemap_regress <- function(X,
                                 id = id.tr,
                                 verbose = F,
                                 tx_names = NULL,
-                                coverage = coverage)$Coef
+                                coverage = coverage)$Coef[-1,]
         pred[-train.folds[[tr]],] = X.test[,rownames(B.cur)] %*% B.cur
 
     }

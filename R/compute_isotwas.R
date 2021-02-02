@@ -119,23 +119,17 @@ compute_isotwas <- function(X,
 
     if ('curds_whey' %in% method){
         if (verbose){print('Running curds_whey')}
-        curds_whey = list()
-        for (i in 1:length(omega_list$icov)){
-            curds_whey = rlist::list.append(curds_whey,
-                                            compute_curds_whey(X,
-                                                               Y,
-                                                               family = family,
-                                                               alpha = alpha,
-                                                               nfolds = nfolds,
-                                                               verbose =
-                                                                   verbose,
-                                                               par = F,
-                                                               n.cores = NULL,
-                                                               tx_names = NULL,
-                                                               seed))
-        }
-        all_models = rlist::list.append(all_models,get_best(curds_whey,
-                                                            G = G))
+        best_curds_whey = compute_curds_whey(X,
+                                        Y,
+                                        family = family,
+                                        alpha = alpha,
+                                        nfolds = nfolds,
+                                        verbose = verbose,
+                                        par = F,
+                                        n.cores = NULL,
+                                        tx_names = NULL,
+                                        seed)
+        all_models = rlist::list.append(all_models,best_curds_whey)
     }
 
     if ('multi_enet' %in% method){
@@ -165,7 +159,7 @@ compute_isotwas <- function(X,
         best_mrce_enet = compute_spring(X = X,
                                         Y = Y,
                                         Omega =
-                                          omega_list$icov[[length(omega_list)]],
+                                omega_list$icov[[length(omega_list$icov)]],
                                         nfolds = nfolds,
                                         tol.in = tol.in,
                                         maxit.in = maxit.in,

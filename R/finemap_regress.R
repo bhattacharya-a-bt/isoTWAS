@@ -60,14 +60,16 @@ finemap_regress <- function(X,
     cs.all = sort(unique(unlist(sapply(susie.fit,
                                        function(x) unlist(x$sets$cs)))))
     P.fm = length(cs.all)
-    if (P.fm == 0){
+    if (P.fm <= 1){
 
-        cs.all = sort(unique(unlist(sapply(susie.fit,
-                                           function(x) which.max(x$pip)))))
+        cs.all = c(cs.all,
+                   sort(unique(unlist(sapply(susie.fit,
+                                           function(x) which.max(x$pip))))))
         cs.all = c(cs.all,
                    sort(unique(unlist(sapply(susie.fit,
                                              function(x)
                                                  which(order(x$pip) == 2))))))
+        cs.all = unique(cs.all)
         P.fm = length(cs.all)
 
     }
@@ -80,7 +82,7 @@ finemap_regress <- function(X,
     colnames(total)[1:G] = colnames(Y)
     fmla = as.formula(paste0('cbind(',
                              paste(colnames(Y),collapse = ','),
-                             ') ~ 0 + ',
+                             ') ~ ',
                              paste(colnames(X[,cs.all]),collapse = '+')))
 
     regression = estimatr::lm_robust(formula = fmla,
