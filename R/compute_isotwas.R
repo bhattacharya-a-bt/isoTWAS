@@ -237,7 +237,9 @@ compute_isotwas <- function(X,
                                     n.cores = n.cores,
                                     tx_names = tx_names,
                                     seed = seed)
-        univariate = list(uni_enet, uni_blup, uni_susie)
+        univariate = list(uni_enet,
+                          uni_blup,
+                          uni_susie)
         all_models = rlist::list.append(all_models,get_best(univariate))
 
     }
