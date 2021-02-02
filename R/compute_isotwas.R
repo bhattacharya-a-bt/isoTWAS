@@ -85,9 +85,8 @@ compute_isotwas <- function(X,
     if (run_all){
         print('run_all is set to T and all methods will be run.')
         method = c('mrce_lasso','curds_whey',
-               'multi_enet','mrce_enet',
-               'finemap','uni_enet',
-               'uni_susie','uni_blup')
+                   'multi_enet','mrce_enet',
+                   'finemap','univariate')
         }
 
     if (is.null(seed)){
@@ -249,8 +248,8 @@ compute_isotwas <- function(X,
 
     if (return_all){
         r2 = sapply(all_models, function(y) sapply(y,function(x) x$R2))
-        r2.df = as.data.frame(cbind(tx_names,r2))
-        colnames(r2.df)[-1] = method
+        r2.df = as.data.frame(cbind(colnames(Y),r2))
+        colnames(r2.df) = c('Transcript',method)
         isotwas_mod = list(Model = get_best(all_models),
                            R2 = r2.df)
         }
