@@ -12,7 +12,7 @@ compute_isotwas(
   id,
   omega_est = "replicates",
   omega_nlambda = 10,
-  method = c("mrce_lasso", "curds_whey", "multi_enet", "mrce_enet", "finemap",
+  method = c("mrce_lasso", "curds_whey", "multi_enet", "mrce_enet", "mmbr", "finemap",
     "univariate"),
   predict_nlambda = 50,
   family = "gaussian",
@@ -24,9 +24,11 @@ compute_isotwas(
   n.cores = NULL,
   tx_names = NULL,
   seed = NULL,
+  run_all = T,
   return_all = F,
   tol.in = 0.001,
-  maxit.in = 1000
+  maxit.in = 1000,
+  coverage = 0.9
 )
 }
 \arguments{
