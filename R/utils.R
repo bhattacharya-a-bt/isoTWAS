@@ -20,6 +20,7 @@ calc.r2 <- function(i,obs,pred){
 
 }
 
+
 get_best <- function(list_mods,G=G){
     r2 = sapply(list_mods, function(y) sapply(y,function(x) x$R2))
     bundle = cbind(apply(r2,1,which.max),1:G)

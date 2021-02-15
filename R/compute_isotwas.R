@@ -38,7 +38,8 @@ compute_isotwas <- function(X,
                             omega_nlambda = 10,
                             method = c('mrce_lasso','curds_whey',
                                        'multi_enet','mrce_enet',
-                                       'finemap','univariate'),
+                                       'mmbr','finemap',
+                                       'univariate'),
                             predict_nlambda = 50,
                             family = 'gaussian',
                             scale = F,
@@ -148,6 +149,17 @@ compute_isotwas <- function(X,
                                     tx_names = tx_names,
                                     seed = seed)
         all_models = rlist::list.append(all_models,best_multi_enet)
+    }
+
+    if ('mmbr' %in% method){
+        if (verbose){print('Running mmbr')}
+        mmbr_mod = multivariate_mmbr(X = X,
+                                     Y = Y,
+                                     nfolds = nfolds,
+                                     verbose = verbose,
+                                     tx_names = tx_names,
+                                     seed = seed)
+        all_models = rlist::list.append(all_models,mmbr_mod)
     }
 
     if ('mrce_enet' %in% method){
