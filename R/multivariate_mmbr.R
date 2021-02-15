@@ -39,6 +39,9 @@ multivariate_mmbr <- function(X,
     }
 
     set.seed(seed)
+    train.folds = caret::createFolds(1:nrow(Y),
+                                     k = nfolds,
+                                     returnTrain = T)
     pred = matrix(ncol = ncol(Y),
                   nrow = nrow(Y))
     for (tr in 1:nfolds){
