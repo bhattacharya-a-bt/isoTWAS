@@ -99,7 +99,7 @@ compute_isotwas <- function(X,
     if ('mrce_lasso' %in% method){
         if (verbose){print('Running mrce_lasso')}
         mrce_lasso = list()
-        for (i in 1:length(omega_list$icov)){
+        for (i in c(ceiling(omega_nlambda)/2,omega_nlambda)){
             mrce_lasso = rlist::list.append(mrce_lasso,
                                             compute_mrce(X = X,
                                                          Y = Y,
